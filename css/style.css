@@ -34,6 +34,7 @@ h1 {
   grid-template-columns: 1fr 1fr 1fr;
   gap: 70px;
   margin: 100px 0;
+  text-align: center;
 }
 
 .photographer_section article,
