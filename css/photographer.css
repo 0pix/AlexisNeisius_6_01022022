@@ -1,76 +1,217 @@
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
 #contact_modal {
-    display: none;
+  display: none;
+}
+
+main {
+  position: relative;
+  margin: 0 100px;
 }
 
 .photograph-header {
-    background-color: #FAFAFA;
-    height: 300px;
-    margin: 0 100px;
+  background-color: #fafafa;
+  height: 300px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 0px 30px;
+  gap: 15%;
 }
 
 .contact_button {
-    font-size: 20px;
-    font-weight: bold;
-    color: white;
-    padding: 11px;
-    width: 170px;
-    height: 70px;
-    border: none;
-    background-color: #901C1C;
-    border-radius: 5px;
-    cursor: pointer;
+  font-size: 15px;
+  font-weight: bold;
+  color: white;
+  padding: 18px 15px;
+  border: none;
+  background-color: #901c1c;
+  border-radius: 5px;
+  cursor: pointer;
+}
+
+.photograph-carrousel {
+  /* background-color: #9b5353; */
+  position: relative;
 }
 
 .modal {
-    border-radius: 5px;
-    background-color: #DB8876;
-    width: 50%;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: space-between;
-    padding: 35px;
-    margin: auto;
+  border-radius: 5px;
+  background-color: #db8876;
+  width: 50%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: space-between;
+  padding: 35px;
+  margin: auto;
 }
 
 .modal header {
-    justify-content: space-between;
-    width: 100%;
+  justify-content: space-between;
+  width: 100%;
 }
 
 .modal header img {
-    cursor: pointer;
+  cursor: pointer;
 }
 
 .modal header h2 {
-    font-size: 64px;
-    font-weight: normal;
-    text-align: center;
+  font-size: 64px;
+  font-weight: normal;
+  text-align: center;
+}
+
+.carrousel-filters {
+}
+
+.carrousel {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  text-align: center;
+  gap: 50px;
+  margin: 0 50px;
+}
+
+.container-filters {
+  width: 100%;
+  /* height: 30px; */
+  height: 80px;
+}
+
+.bloc-filters {
+  display: flex;
+  position: absolute;
+  z-index: 100;
+  left: 50px;
+  top: 0;
+}
+
+.bloc-filters img {
+  position: absolute;
+  width: 15px;
+  transform: translate(-50%, -50%);
+  right: 0;
+  top: 22px;
+  cursor: pointer;
+}
+
+.bloc-filters p {
+  margin: 12px 5px 0px 0px;
+  font-weight: 600;
+}
+
+main ul {
+  border-radius: 5px;
+  background: #911c1c;
+  width: 130px;
+  /* padding: 0px 10px; */
+  color: white;
+}
+
+ul span {
+  display: block;
+  height: 1px;
+  width: 90%;
+  background-color: white;
+  margin: auto;
+}
+
+main li {
+  margin-left: 10px;
+  padding: 12px 0;
+  list-style: none;
+  cursor: pointer;
+  width: 80px;
+}
+
+.media-card {
+  width: 100%;
+  height: 300px;
+  overflow: hidden;
+  background-color: white;
+}
+
+.media-card img,
+.media-card video {
+  width: 100%;
+  height: 260px;
+  object-fit: cover;
+  overflow: hidden;
+}
+
+.text-likes {
+  width: 100%;
+  height: 40px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  position: relative;
+  top: -5px;
+}
+
+#likes-price {
+  position: absolute;
+  display: flex;
+  justify-content: space-between;
+  padding: 10px 20px;
+  bottom: 0;
+  right: -85px;
+  background: #db8876;
+  border-radius: 5px;
+  width: 220px;
+  font-weight: 500;
+  z-index: 1;
+}
+
+#likes-price div {
+  display: flex;
+}
+#likes-price img {
+  padding: 0px 3px;
 }
 
 form {
-    display: flex;
-    width: 100%;
-    flex-direction: column;
-    align-items: flex-start;
+  display: flex;
+  width: 100%;
+  flex-direction: column;
+  align-items: flex-start;
 }
 
 form label {
-    color: #312E2E;
-    font-size: 36px;
+  color: #312e2e;
+  font-size: 36px;
 }
 
 form div {
-    display: flex;
-    flex-direction: column;
-    width: 100%;
-    align-items: self-start;
-    margin-bottom: 26px;
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  align-items: self-start;
+  margin-bottom: 26px;
 }
 
 form input {
-    width: 100%;
-    height: 68px;
-    border: none;
-    border-radius: 5px;
+  width: 100%;
+  height: 68px;
+  border: none;
+  border-radius: 5px;
+}
+
+@media screen and (max-width: 600px) {
+  main {
+    margin: 0;
+  }
+
+  .carrousel {
+    display: grid;
+    grid-template-columns: repeat(1, 1fr);
+    text-align: center;
+    gap: 50px;
+    margin: 0 50px;
+  }
 }

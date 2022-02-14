@@ -1,20 +1,35 @@
-let photographers = [];
-
 async function getPhotographers() {
-  await fetch("./../../data/photographers.json")
-    .then((res) => res.json())
-    .then((data) => (photographers = data.photographers));
-  // et bien retourner le tableau photographers seulement une fois
-  return {
-    photographers,
-  };
+  let data = [];
+  await fetch("./../../data/photographers.json").then(
+    (res) => (data = res.json())
+  );
+  return data;
 }
+
+async function test2() {
+  let onVerra = await getPhotographers();
+  console.log(onVerra);
+}
+test2();
+
+// async function getPhotographers() {
+//   await fetch("./../../data/photographers.json")
+//     .then((res) => res.json())
+//     .then((data) => (photographers = data.photographers));
+//   // et bien retourner le tableau photographers seulement une fois
+//   return {
+//     photographers,
+//   };
+// }
+
+// import {getDescription} from "./helpers.js";
 
 // Afficher les photographes sur l'accueil
 async function userDisplay() {
+  const photographerInfo = await getPhotographers();
   const photographersSection = document.querySelector(".photographer_section");
   await getPhotographers();
-  photographerFactory(photographersSection, photographers);
+  photographerFactory(photographersSection, photographerInfo.photographers);
 }
 userDisplay();
 
