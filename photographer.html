@@ -9,6 +9,9 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,wght@0,400;0,500;0,700;1,700&display=swap"
     rel="stylesheet">
+
+  <!-- fontawesome  -->
+  <script src="https://kit.fontawesome.com/b1f64f6a17.js" crossorigin="anonymous"></script>
   <title>Fisheye - photographe </title>
 </head>
 
@@ -26,15 +29,15 @@
     <div class="photograph-carrousel" id="photograph-carrousel">
       <div class="container-filters">
         <div class="bloc-filters">
-          <p>Trier par :</p>
-          <img id="buttonOpenCloseFilter" src="./assets/icons/Fichier 2.svg" alt="">
-          <ul id="ul-filter">
-            <li class="carrousel-filters">Popularité</li>
-            <!-- <span class="line"></span>
-            <li class="carrousel-filters">Date</li>
-            <span class="line"></span>
-            <li class="carrousel-filters">Titre</li> -->
-          </ul>
+
+          <label for="pet-select">Trier par :</label>
+
+          <select id="pet-select" onchange="onSelectOption()">
+            <option selected value="popularity">Popularité</option>
+            <option value="date">Date</option>
+            <option value="title">Titre</option>
+          </select>
+
         </div>
       </div>
 
@@ -47,6 +50,7 @@
     <div class="modal">
       <header>
         <h2>Contactez-moi</h2>
+        <!-- <h2>Contactez-moi</h2> -->
         <img src="assets/icons/close.svg" onclick="closeModal()" />
       </header>
       <form>
@@ -54,10 +58,23 @@
           <label>Prénom</label>
           <input />
         </div>
+        <div>
+          <label>Nom</label>
+          <input />
+        </div>
+        <div>
+          <label>Email</label>
+          <input />
+        </div>
+        <div>
+          <label>Votre message</label>
+          <input />
+        </div>
         <button class="contact_button">Envoyer</button>
       </form>
     </div>
   </div>
+
   <script src="/scripts/utils/contactForm.js"></script>
   <script src="scripts/pages/photographer.js"></script>
 </body>

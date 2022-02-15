@@ -1,17 +1,16 @@
+/* GENERAL */
+
 * {
   margin: 0;
   padding: 0;
   box-sizing: border-box;
 }
-
-#contact_modal {
-  display: none;
-}
-
 main {
   position: relative;
   margin: 0 100px;
 }
+
+/* BLOC TOP  */
 
 .photograph-header {
   background-color: #fafafa;
@@ -34,40 +33,53 @@ main {
   cursor: pointer;
 }
 
-.photograph-carrousel {
-  /* background-color: #9b5353; */
-  position: relative;
-}
+/* FILTERS  */
 
-.modal {
+select {
+  -webkit-padding-end: 20px;
+  -moz-padding-end: 20px;
+  -webkit-padding-start: 2px;
+  -moz-padding-start: 2px;
+  background: #911c1c;
+  border: 1px solid #aaa;
   border-radius: 5px;
-  background-color: #db8876;
-  width: 50%;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: space-between;
-  padding: 35px;
-  margin: auto;
+  box-shadow: none;
+  color: white;
+  font-size: inherit;
+  margin: 0;
+  overflow: hidden;
+  padding: 10px;
+  text-overflow: ellipsis;
+  white-space: nowrap;
 }
 
-.modal header {
-  justify-content: space-between;
+.container-filters {
   width: 100%;
+  height: 80px;
 }
 
-.modal header img {
-  cursor: pointer;
+.bloc-filters {
+  display: flex;
+  z-index: 100;
+  left: 50px;
+  top: 0;
 }
 
-.modal header h2 {
-  font-size: 64px;
-  font-weight: normal;
-  text-align: center;
+.trier-par {
+  margin: 10px 0px 0px 0px;
+  font-weight: 600;
 }
 
-.carrousel-filters {
-}
+/* .bloc-filters div {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  /* background-color: aqua; */
+/* padding: 10px 0;
+  padding-left: 10px;
+} */
+
+/* CARROUSEL */
 
 .carrousel {
   display: grid;
@@ -77,63 +89,13 @@ main {
   margin: 0 50px;
 }
 
-.container-filters {
-  width: 100%;
-  /* height: 30px; */
-  height: 80px;
-}
-
-.bloc-filters {
-  display: flex;
-  position: absolute;
-  z-index: 100;
-  left: 50px;
-  top: 0;
-}
-
-.bloc-filters img {
-  position: absolute;
-  width: 15px;
-  transform: translate(-50%, -50%);
-  right: 0;
-  top: 22px;
-  cursor: pointer;
-}
-
-.bloc-filters p {
-  margin: 12px 5px 0px 0px;
-  font-weight: 600;
-}
-
-main ul {
-  border-radius: 5px;
-  background: #911c1c;
-  width: 130px;
-  /* padding: 0px 10px; */
-  color: white;
-}
-
-ul span {
-  display: block;
-  height: 1px;
-  width: 90%;
-  background-color: white;
-  margin: auto;
-}
-
-main li {
-  margin-left: 10px;
-  padding: 12px 0;
-  list-style: none;
-  cursor: pointer;
-  width: 80px;
-}
-
 .media-card {
   width: 100%;
   height: 300px;
   overflow: hidden;
   background-color: white;
+  box-shadow: rgba(100, 100, 111, 0.2) 0px 7px 29px 0px;
+  border-radius: 5px;
 }
 
 .media-card img,
@@ -144,14 +106,38 @@ main li {
   overflow: hidden;
 }
 
+.bloc-img {
+  border-radius: 5px;
+  overflow: hidden;
+}
+
 .text-likes {
   width: 100%;
   height: 40px;
   display: flex;
   justify-content: space-between;
   align-items: center;
-  position: relative;
+  /* position: relative; */
   top: -5px;
+  padding: 5px;
+  color: #901c1c;
+}
+
+.heart-likes {
+  display: flex;
+  align-items: center;
+}
+
+#heart-card {
+  width: 13px;
+  height: 13px;
+}
+
+.p-likes {
+  color: #901c1c;
+  padding: 5px;
+  font-weight: 600;
+  font-size: 0.8em;
 }
 
 #likes-price {
@@ -171,8 +157,49 @@ main li {
 #likes-price div {
   display: flex;
 }
+
 #likes-price img {
   padding: 0px 3px;
+}
+
+/* CONTACT */
+
+#contact_modal {
+  position: fixed;
+  height: 100vh;
+  width: 100%;
+  top: 0;
+  background-color: rgba(255, 255, 255, 0.466);
+  display: none;
+  justify-content: center;
+  align-items: center;
+  /* transform: translate(-50%, -50%); */
+}
+
+.modal {
+  border-radius: 5px;
+  background-color: #db8876;
+  width: 30%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: space-between;
+  padding: 35px;
+}
+
+.modal header {
+  justify-content: space-between;
+  width: 100%;
+}
+
+.modal header img {
+  cursor: pointer;
+}
+
+.modal header h2 {
+  font-size: 64px;
+  font-weight: normal;
+  text-align: center;
 }
 
 form {
@@ -201,6 +228,8 @@ form input {
   border: none;
   border-radius: 5px;
 }
+
+/* RESPONSIVE */
 
 @media screen and (max-width: 600px) {
   main {
