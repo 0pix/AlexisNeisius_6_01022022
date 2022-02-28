@@ -4,6 +4,8 @@
   margin: 0;
   padding: 0;
   box-sizing: border-box;
+  outline-color: rgb(0, 0, 0);
+  outline-width: thick;
 }
 main {
   position: relative;
@@ -18,8 +20,21 @@ main {
   display: flex;
   justify-content: center;
   align-items: center;
-  padding: 0px 30px;
-  gap: 15%;
+  padding: 0px 40px;
+}
+
+.photograph-header div {
+  width: 33%;
+}
+
+#bloc-contact {
+  display: flex;
+  justify-content: center;
+}
+
+#bloc-picture {
+  display: flex;
+  justify-content: flex-end;
 }
 
 .contact_button {
@@ -53,9 +68,31 @@ select {
   white-space: nowrap;
 }
 
+/* select:hover,
+select:focus {
+  outline:#06ee38 10px;
+} */
+
+option:hover {
+  background-color: yellow;
+}
+
+select option:hover, select option:active{
+  background-color: #db8876;
+}
+/* select:focus {
+  outline: none;
+} */
+
+select:focus > option:checked { 
+  background: rgb(14, 221, 31) !important;
+}
+
 .container-filters {
+  padding: 15px 0;
   width: 100%;
   height: 80px;
+  font-weight: 600;
 }
 
 .bloc-filters {
@@ -70,15 +107,6 @@ select {
   font-weight: 600;
 }
 
-/* .bloc-filters div {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  /* background-color: aqua; */
-/* padding: 10px 0;
-  padding-left: 10px;
-} */
-
 /* CARROUSEL */
 
 .carrousel {
@@ -86,7 +114,7 @@ select {
   grid-template-columns: repeat(3, 1fr);
   text-align: center;
   gap: 50px;
-  margin: 0 50px;
+  padding-bottom: 50px;
 }
 
 .media-card {
@@ -98,18 +126,25 @@ select {
   border-radius: 5px;
 }
 
-.media-card img,
-.media-card video {
+.bloc-img,
+.bloc-img img,
+.bloc-img video {
+  border-radius: 5px;
+  overflow: hidden;
   width: 100%;
   height: 260px;
   object-fit: cover;
   overflow: hidden;
 }
 
-.bloc-img {
-  border-radius: 5px;
-  overflow: hidden;
+.bloc-img button {
+  width: 100%;
+  height: 100%;
+  border: none;
+  position: relative;
+  cursor: zoom-in;
 }
+
 
 .text-likes {
   width: 100%;
@@ -117,10 +152,17 @@ select {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  /* position: relative; */
   top: -5px;
   padding: 5px;
   color: #901c1c;
+}
+
+.text-likes button {
+  cursor: pointer;
+}
+
+.text-likes button:hover {
+  transform: scale(1.2);          
 }
 
 .heart-likes {
@@ -128,9 +170,9 @@ select {
   align-items: center;
 }
 
-#heart-card {
-  width: 13px;
-  height: 13px;
+.heart-likes img {
+  width: 15px;
+  height: 15px;
 }
 
 .p-likes {
@@ -141,12 +183,12 @@ select {
 }
 
 #likes-price {
-  position: absolute;
+  position: fixed;
   display: flex;
   justify-content: space-between;
   padding: 10px 20px;
   bottom: 0;
-  right: -85px;
+  right: 25px;
   background: #db8876;
   border-radius: 5px;
   width: 220px;
@@ -162,10 +204,85 @@ select {
   padding: 0px 3px;
 }
 
-/* CONTACT */
+#left-arrow,
+#right-arrow {
+  cursor: pointer;
+}
+
+#right-arrow {
+  transform: rotate(180deg);
+}
+
+.btn-modal {
+  background-color: transparent;
+  border: none;
+}
+
+
+.arrow-video {
+  transform: scale(0.4);
+  background-color: transparent;
+  position: absolute;
+  object-fit: none !important; 
+  opacity: 0.9;
+}
+
+
+/* Zoom Image */
+
+
+
+#zoom-modal {
+  position: fixed;
+  width: 100%;
+  height: 100vh;
+  background-color: rgba(255, 255, 255, 0.466);
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  display: none;
+  justify-content: center;
+  align-items: center;
+  box-shadow: rgba(149, 157, 165, 0.2) 0px 8px 24px;
+  overflow: hidden;
+}
+
+#img-ui {
+  background-color: rgb(255, 255, 255);
+  position: relative;
+  width: 90%;
+  height: 90vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  box-shadow: rgba(149, 157, 165, 0.2) 0px 8px 24px;
+  max-width: 1400px;
+  overflow: hidden;
+  border-radius: 10px;
+}
+
+#zoom-img,
+#zoom-video {
+  max-width: 900px;
+  max-height: 80vh;
+  object-fit: contain;
+}
+/* #zoom-video {
+  width: 300px;
+  height: 300px;
+} */
+
+#close-zoom {
+  position: absolute;
+  top: 30px;
+  right: 30px;
+}
+
+/* CONTACT FORM */
 
 #contact_modal {
   position: fixed;
+  
   height: 100vh;
   width: 100%;
   top: 0;
@@ -178,18 +295,24 @@ select {
 
 .modal {
   border-radius: 5px;
+  position: relative;
   background-color: #db8876;
   width: 30%;
+  min-width: 500px;
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: space-between;
-  padding: 35px;
+  padding: 10px 30px;
 }
 
 .modal header {
   justify-content: space-between;
+  align-items: flex-start;
+  flex-direction: column;
   width: 100%;
+  margin-bottom: 50px;
+  position: relative;
 }
 
 .modal header img {
@@ -197,9 +320,17 @@ select {
 }
 
 .modal header h2 {
-  font-size: 64px;
+  font-size: 50px;
   font-weight: normal;
   text-align: center;
+}
+
+.close-contact-modal {
+  position: absolute;
+  top: 20px;
+  right: 0;
+  background-color: transparent;
+  border: 0;
 }
 
 form {
@@ -211,7 +342,7 @@ form {
 
 form label {
   color: #312e2e;
-  font-size: 36px;
+  font-size: 20px;
 }
 
 form div {
@@ -219,16 +350,59 @@ form div {
   flex-direction: column;
   width: 100%;
   align-items: self-start;
-  margin-bottom: 26px;
+  margin-bottom: 10px;
 }
 
 form input {
   width: 100%;
-  height: 68px;
+  height: 50px;
   border: none;
   border-radius: 5px;
+  font-size: 25px;
+  padding: 5px;
 }
 
+form textarea {
+  height: 150px;
+  align-items: baseline;
+  width: 100%;
+  resize: none;
+  border: none;
+  border-radius: 5px;
+  font-size: 20px;
+  padding: 5px;
+}
+
+.input {
+  outline: none;
+}
+
+.input:focus {
+  border: 2px solid #dba69a;
+}
+
+.error-message {
+  display: none;
+}
+
+#form-validation {
+  width: 100%;
+  height: 100%;
+  background-color: #db8876;
+  position: absolute;
+  display: none;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+}
+
+#form-validation button{
+  position: absolute;
+  bottom: 0;
+  right: 160px;
+  transform: translate(-50%,-50%);
+  margin-top: 50px;
+}
 /* RESPONSIVE */
 
 @media screen and (max-width: 600px) {
@@ -244,3 +418,11 @@ form input {
     margin: 0 50px;
   }
 }
+
+
+.like-test{
+  width: 30px;
+  border: none;
+  background-color: transparent;
+}
+

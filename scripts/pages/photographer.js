@@ -68,14 +68,16 @@ async function addPhotographerInHeader() {
   photographerHeader.innerHTML = `
       <div>
         <h2 class="test">${photographerInfo.name}</h2>
-        <h3>${photographerInfo.city}${photographerInfo.country}</h3>
+        <h3>${photographerInfo.city} ${photographerInfo.country}</h3>
         <p>${photographerInfo.tagline}</p>
         <p class="price">${photographerInfo.price}€/jour</p>
       </div>
-
-      <button class="contact_button" onclick="displayModal()">Contactez-moi</button>
-
-      <img src="assets/photographers/${photographerInfo.portrait}" alt="photo de ${photographerInfo.name}">
+      <div id="bloc-contact">
+        <button class="contact_button" onclick="displayModal()">Contactez-moi</button>
+      </div>
+      <div id="bloc-picture">
+        <img src="assets/photographers/${photographerInfo.portrait}" alt="photo de ${photographerInfo.name}">
+      </div>
     `;
 }
 
@@ -83,32 +85,35 @@ async function addPhotographerInHeader() {
 async function carrousel(media) {
   const photographCarrousel = document.getElementById("carrousel");
   const photographerInfo = await getPhotographerInfo();
-  const selectFilters = document.getElementById("pet-select");
-  if (media === null || media === undefined) {
-    media = await getTablerLikes();
-  }
+  media = media ?? (await getTablerLikes());
+  console.log(media);
+
   photographCarrousel.innerHTML = media
     .map(
       (mediaPhoto) =>
         `
-<div class="media-card">
+<article class="media-card"  > 
   <div class = "bloc-img">
   ${
     mediaPhoto.image
-      ? `<img class="for-zoom" src="assets/images/media/${photographerInfo.name}/${mediaPhoto.image}" alt="photo de ${photographerInfo.name}"></img>`
-      : `<video class="for-zoom" controls><source src="assets/images/media/${photographerInfo.name}/${mediaPhoto.video}" type="video/mp4" alt="photo de ${photographerInfo.name}"></video>`
+      ? `<button onclick="zoom(${mediaPhoto.id})"> <img class="for-zoom"    src="assets/images/media/${photographerInfo.name}/${mediaPhoto.image}" alt="photo de ${photographerInfo.name}-${mediaPhoto.title}"></img></button>`
+      : `<button onclick="zoom(${mediaPhoto.id})"><img class="arrow-video" src="./assets/icons/play-button-svgrepo-com.svg" alt=""><video class="for-zoom"><source src="assets/images/media/${photographerInfo.name}/${mediaPhoto.video}" type="video/mp4" alt="vidéo de ${photographerInfo.name}"></video></button>`
   }
   </div>
 
   <div class="text-likes">
     <p>${mediaPhoto.title}</p>
     <div class ="heart-likes">
-      <p class="p-likes">${mediaPhoto.likes}</p>
-      <img  src="./assets/icons/heart-solid.svg" class="heart-card"  id="heart-card" alt="">
+      <p class="p-likes" id="p-likes">${mediaPhoto.likes}</p>
+      <button class="like-test" name="bouton j'aime"  onclick="plusLike(${
+        mediaPhoto.id
+      })"  id="heart-card-${mediaPhoto.id}">
+        <img src="./assets/icons/heart-solid-red.svg" alt="bouton like en forme de coeur">
+      </button>
     </div>
   </div>
 
-</div>
+</article>
 `
     )
     .join("");
@@ -142,7 +147,8 @@ async function getTablerTitles() {
   });
 }
 
-async function onSelectOption() {
+
+async function getGoodMedias() {
   const selectFilters = document.getElementById("pet-select");
   let goodMedias = [];
   if (selectFilters.value === "popularity") {
@@ -154,8 +160,12 @@ async function onSelectOption() {
   if (selectFilters.value === "title") {
     goodMedias = await getTablerTitles();
   }
+  return goodMedias;
+}
+
+async function onSelectOption() {
+  const goodMedias = await getGoodMedias();
   await carrousel(goodMedias);
-  console.log(goodMedias);
 }
 
 /***************|Récuper et afficher le Nombre Total de likes pour le petit encadré en bas|***************/
@@ -177,7 +187,7 @@ async function likeAndPrice() {
   const likesPrice = document.getElementById("likes-price");
   likesPrice.innerHTML = `
     <div class="like">
-      <p>${allLikes}</p>
+      <p id="allNumberLike">${allLikes}</p>
       <img src="./assets/icons/heart-solid.svg" alt="">
     </div>
 
@@ -188,27 +198,123 @@ async function likeAndPrice() {
   `;
 }
 
-/***************|Zoom Image|***************/
-async function zoom() {
-  await onSelectOption();
-  const mediaForZoom = await getGoodMediasWithId();
-  // const mediaForZoom = document.querySelectorAll(".for-zoom");
-  for (i = 0; i < mediaForZoom.length; i++) {
-    mediaForZoom[i].onclick = function (e) {
-      let onVerra = e.target.id;
-      console.log(onVerra);
-    };
-  }
-  // mediaForZoom.addEventListener("click", function (e) {
-  //   console.log(e.target.id);
-  // });
-  // console.log(mediaForZoom[2].id);
-  // mediaForZoom.addEventListener("click", (e) => {
-  //   console.log(e.target.id);
-  // });
-  console.log(mediaForZoom);
+/***************|Likes++|***************/
+async function plusLike(id) {
+  const heartImg = document.getElementById("heart-card-" + id);
+  let likeElement = heartImg.previousElementSibling;
+  let likeContent = likeElement.textContent;
+  console.log(likeContent);
+  likeElement.textContent = ++likeContent;
+  const allNumberLike = document.getElementById("allNumberLike");
+  let allLike = document.getElementById("allNumberLike").textContent;
+
+  allNumberLike.textContent = ++allLike;
 }
-zoom();
+
+/***************|Zoom Image|***************/
+async function zoom(id) {
+  const photographerInfo = await getPhotographerInfo();
+  const goodMedias = await getGoodMedias();
+  const imgAndTitle = document.getElementById("image-title");
+  const zoomModal = document.getElementById("zoom-modal");
+  const leftArrow = document.getElementById("left-arrow");
+  const rightArrow = document.getElementById("right-arrow");
+  const thePicture = goodMedias.find((element) => element.id === id);
+  let indexImg = goodMedias.indexOf(thePicture);
+  zoomModal.style.display = "flex";
+  buildImageCarrousel(goodMedias, photographerInfo, imgAndTitle, indexImg);
+
+  // Click on arrow
+  leftArrow.addEventListener("click", () => {
+    indexImg = previousImage(
+      indexImg,
+      goodMedias,
+      photographerInfo,
+      imgAndTitle
+    );
+  });
+
+  rightArrow.addEventListener("click", () => {
+    indexImg = nextImage(indexImg, goodMedias, photographerInfo, imgAndTitle);
+  });
+
+
+  // With arrow from keyboard
+  window.addEventListener("keydown", (e) => {
+    if (zoomModal.style.display === "flex" && e.key === "ArrowLeft") {
+      indexImg = previousImage(
+        indexImg,
+        goodMedias,
+        photographerInfo,
+        imgAndTitle
+      );
+    } else if (zoomModal.style.display === "flex" && e.key === "ArrowRight") {
+      indexImg = nextImage(indexImg, goodMedias, photographerInfo, imgAndTitle);
+    
+    }
+  });
+}
+
+function previousImage(indexImg, goodMedias, photographerInfo, imgAndTitle) {
+  if (indexImg === 0) {
+    indexImg = goodMedias.length - 1;
+  } else {
+    indexImg--;
+  }
+  buildImageCarrousel(goodMedias, photographerInfo, imgAndTitle, indexImg);
+  return indexImg;
+}
+
+function nextImage(indexImg, goodMedias, photographerInfo, imgAndTitle) {
+  if (indexImg === goodMedias.length - 1) {
+    indexImg = 0;
+  } else {
+    indexImg++;
+  }
+  buildImageCarrousel(goodMedias, photographerInfo, imgAndTitle, indexImg);
+  return indexImg;
+}
+
+function buildImageCarrousel(goodMedias, photographerInfo, element, index) {
+  element.innerHTML = `
+  ${
+    goodMedias[index].image
+      ? `<img src="./assets/images/media/${photographerInfo.name}/${goodMedias[index].image}" id="zoom-img" alt="">`
+      : `<video  controls autoplay id="zoom-video"><source src="assets/images/media/${photographerInfo.name}/${goodMedias[index].video}" id="zoom-video" type="video/mp4" alt="photo de ${photographerInfo.name}"></video>`
+  }
+<h2>${goodMedias[index].title}</h2>
+  `;
+}
+
+function closeZoom() {
+  const zoomModal = document.getElementById("zoom-modal");
+  zoomModal.style.display = "none";
+}
+
+window.addEventListener ("keydown", (e) =>{
+  const zoomModal = document.getElementById("zoom-modal");
+  if (zoomModal.style.display = "flex" && e.key === "Escape") {
+    closeZoom();
+  }
+});
+
+window.addEventListener("click", (event) => {
+  const modal = document.getElementById("zoom-modal");
+  if(event.target == modal) {
+    closeZoom()
+  }
+});
+
+
+/***************|Name on contact form|***************/
+async function nameOnContactForm(){
+const photographerInfo = await getPhotographerInfo();
+const nameContactForm =  document.getElementById("name-contact-form");
+nameContactForm.textContent = 
+`
+${photographerInfo.name}
+`
+}
 
 /***************|Fonction INIT pour appeler les fonctions|***************/
 function init() {
@@ -216,6 +322,10 @@ function init() {
   likeAndPrice();
   getAllLikes();
   addPhotographerInHeader();
+  nameOnContactForm()
 }
 
+
 init();
+
+
