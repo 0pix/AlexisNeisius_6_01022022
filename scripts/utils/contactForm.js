@@ -4,6 +4,7 @@ function displayModal() {
 }
 
 function closeModal() {
+  const errorMessage = document.querySelectorAll(".error-message")
   const modal = document.getElementById("contact_modal");
   const messageValidate = document.getElementById("form-validation");
   const inputBorder = document.querySelectorAll(".input");
@@ -13,6 +14,9 @@ function closeModal() {
     item.style.border = "none";
   });
   form.reset();
+  errorMessage.forEach(element => {
+    element .innerHTML=("")
+  });
 }
 
 
@@ -42,12 +46,14 @@ const myRegx =
   /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
 
 const validate = () => {
+  let dataForm = []
   isValidate = true;
   for (let i = 0; i < formData.length; i++) {
     const inputBalise = formData[i].querySelector(".input");
     const labelBalise = formData[i].querySelector("label");
     const errorBalise = formData[i].querySelector(".error-message");
     let errorMessage = "";
+    
     // Switch to give an action by type.
     switch (inputBalise.type) {
 
@@ -57,6 +63,7 @@ const validate = () => {
             "Veuillez entrer 2 caractères ou plus pour le champ du " +
             labelBalise.textContent;
           isValidate = false;
+          
         }
         break;
 
@@ -89,6 +96,7 @@ const validate = () => {
       inputBalise.style.border = "3px red solid";
     } else {
       inputBalise.style.border = "3px #279e7a solid";
+      dataForm.push(inputBalise.value)
     }
 
     // Show error message
@@ -99,6 +107,7 @@ const validate = () => {
   //Global message validation
   if (isValidate) {
     messageValidate.style.display = "flex";
+    console.log("Voici les information du formulaire: " , dataForm);
   }
 };
 

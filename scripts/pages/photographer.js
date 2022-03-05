@@ -1,9 +1,4 @@
-// Mettre le code JavaScript lié à la page photographer.html
-// async function test2() {
-//   let onVerra = await getPhotographers();
-//   console.log(onVerra);
-// }
-// test2();
+
 
 /***************|Récuperer tout les photogaphes sur le  Json***************/
 async function getPhotographers() {
@@ -20,7 +15,6 @@ async function getMedia() {
   await fetch("./../../data/photographers.json")
     .then((res) => res.json())
     .then((data) => (media = data.media));
-  // .then(console.log);
   return {
     media,
   };
@@ -65,75 +59,34 @@ async function getGoodMediasWithId() {
 async function addPhotographerInHeader() {
   const photographerInfo = await getPhotographerInfo();
   const photographerHeader = document.getElementById("photograph-header");
-  photographerHeader.innerHTML = `
-      <div>
-        <h2 class="test">${photographerInfo.name}</h2>
-        <h3>${photographerInfo.city} ${photographerInfo.country}</h3>
-        <p>${photographerInfo.tagline}</p>
-        <p class="price">${photographerInfo.price}€/jour</p>
-      </div>
-      <div id="bloc-contact">
-        <button class="contact_button" onclick="displayModal()">Contactez-moi</button>
-      </div>
-      <div id="bloc-picture">
-        <img src="assets/photographers/${photographerInfo.portrait}" alt="photo de ${photographerInfo.name}">
-      </div>
-    `;
+  photographerHeaderFactory(photographerHeader, photographerInfo)
 }
 
 /***************|Carrousel et tag|***************/
 async function carrousel(media) {
   const photographCarrousel = document.getElementById("carrousel");
   const photographerInfo = await getPhotographerInfo();
-  media = media ?? (await getTablerLikes());
-  console.log(media);
-
-  photographCarrousel.innerHTML = media
-    .map(
-      (mediaPhoto) =>
-        `
-<article class="media-card"  > 
-  <div class = "bloc-img">
-  ${
-    mediaPhoto.image
-      ? `<button onclick="zoom(${mediaPhoto.id})"> <img class="for-zoom"    src="assets/images/media/${photographerInfo.name}/${mediaPhoto.image}" alt="photo de ${photographerInfo.name}-${mediaPhoto.title}"></img></button>`
-      : `<button onclick="zoom(${mediaPhoto.id})"><img class="arrow-video" src="./assets/icons/play-button-svgrepo-com.svg" alt=""><video class="for-zoom"><source src="assets/images/media/${photographerInfo.name}/${mediaPhoto.video}" type="video/mp4" alt="vidéo de ${photographerInfo.name}"></video></button>`
-  }
-  </div>
-
-  <div class="text-likes">
-    <p>${mediaPhoto.title}</p>
-    <div class ="heart-likes">
-      <p class="p-likes" id="p-likes">${mediaPhoto.likes}</p>
-      <button class="like-test" name="bouton j'aime"  onclick="plusLike(${
-        mediaPhoto.id
-      })"  id="heart-card-${mediaPhoto.id}">
-        <img src="./assets/icons/heart-solid-red.svg" alt="bouton like en forme de coeur">
-      </button>
-    </div>
-  </div>
-
-</article>
-`
-    )
-    .join("");
+  media = media ?? (await getTagLikes());
+  carrouselFactory(photographCarrousel, media, photographerInfo)
 }
 
 /***************|Trier les médias par likes|***************/
-async function getTablerLikes() {
+async function getTagLikes() {
   let goodMedias = await getGoodMediasWithId();
 
   return goodMedias.sort((a, b) => b.likes - a.likes);
 }
+
 /***************|Trier les médias par Dates|***************/
-async function getTablerDates() {
+async function getTagDates() {
   let goodMedias = await getGoodMediasWithId();
   return goodMedias.sort(
     (a, b) => new Date(a.date).valueOf() - new Date(b.date).valueOf()
   );
 }
+
 /***************|Trier les médias par Titre|***************/
-async function getTablerTitles() {
+async function getTagTitles() {
   let goodMedias = await getGoodMediasWithId();
 
   return goodMedias.sort((a, b) => {
@@ -147,18 +100,18 @@ async function getTablerTitles() {
   });
 }
 
-
+/***************|Récuperer le bon tableau des média en fontion du tag chosis|***************/
 async function getGoodMedias() {
   const selectFilters = document.getElementById("pet-select");
   let goodMedias = [];
   if (selectFilters.value === "popularity") {
-    goodMedias = await getTablerLikes();
+    goodMedias = await getTagLikes();
   }
   if (selectFilters.value === "date") {
-    goodMedias = await getTablerDates();
+    goodMedias = await getTagDates();
   }
   if (selectFilters.value === "title") {
-    goodMedias = await getTablerTitles();
+    goodMedias = await getTagTitles();
   }
   return goodMedias;
 }
@@ -175,7 +128,6 @@ async function getAllLikes() {
   for (let i = 0; i < goodMedias.length; i++) {
     likes += goodMedias[i].likes;
   }
-
   console.log("nombre total de likes : " + likes);
   return likes;
 }
@@ -183,18 +135,16 @@ async function getAllLikes() {
 async function likeAndPrice() {
   const allLikes = await getAllLikes();
   const photographerInfo = await getPhotographerInfo();
-  const mediaPhotographer = await getGoodMediasWithId();
   const likesPrice = document.getElementById("likes-price");
   likesPrice.innerHTML = `
     <div class="like">
       <p id="allNumberLike">${allLikes}</p>
       <img src="./assets/icons/heart-solid.svg" alt="">
     </div>
-
+    
     <div class="price-day">
       <p>${photographerInfo.price}€ / jour</p>
     </div>
-
   `;
 }
 
@@ -207,7 +157,6 @@ async function plusLike(id) {
   likeElement.textContent = ++likeContent;
   const allNumberLike = document.getElementById("allNumberLike");
   let allLike = document.getElementById("allNumberLike").textContent;
-
   allNumberLike.textContent = ++allLike;
 }
 
@@ -250,46 +199,28 @@ async function zoom(id) {
       );
     } else if (zoomModal.style.display === "flex" && e.key === "ArrowRight") {
       indexImg = nextImage(indexImg, goodMedias, photographerInfo, imgAndTitle);
-    
     }
   });
-}
-
-function previousImage(indexImg, goodMedias, photographerInfo, imgAndTitle) {
-  if (indexImg === 0) {
-    indexImg = goodMedias.length - 1;
-  } else {
-    indexImg--;
-  }
-  buildImageCarrousel(goodMedias, photographerInfo, imgAndTitle, indexImg);
-  return indexImg;
-}
-
-function nextImage(indexImg, goodMedias, photographerInfo, imgAndTitle) {
-  if (indexImg === goodMedias.length - 1) {
-    indexImg = 0;
-  } else {
-    indexImg++;
-  }
-  buildImageCarrousel(goodMedias, photographerInfo, imgAndTitle, indexImg);
-  return indexImg;
-}
-
-function buildImageCarrousel(goodMedias, photographerInfo, element, index) {
-  element.innerHTML = `
-  ${
-    goodMedias[index].image
-      ? `<img src="./assets/images/media/${photographerInfo.name}/${goodMedias[index].image}" id="zoom-img" alt="">`
-      : `<video  controls autoplay id="zoom-video"><source src="assets/images/media/${photographerInfo.name}/${goodMedias[index].video}" id="zoom-video" type="video/mp4" alt="photo de ${photographerInfo.name}"></video>`
-  }
-<h2>${goodMedias[index].title}</h2>
-  `;
+  noScroll()
 }
 
 function closeZoom() {
   const zoomModal = document.getElementById("zoom-modal");
+  const body = document.querySelector("body");
   zoomModal.style.display = "none";
+  body.style.overflowY = "auto"
 }
+
+function noScroll() {
+  const zoomModal = document.getElementById("zoom-modal");
+  const body = document.querySelector("body");
+  if(zoomModal.style.display === "flex"){
+    body.style.overflowY = "hidden"
+    console.log("coucou");
+  }
+  body.style.overflowY = "hidden"
+}
+
 
 window.addEventListener ("keydown", (e) =>{
   const zoomModal = document.getElementById("zoom-modal");
@@ -324,7 +255,6 @@ function init() {
   addPhotographerInHeader();
   nameOnContactForm()
 }
-
 
 init();
 
