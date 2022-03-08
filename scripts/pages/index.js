@@ -1,3 +1,4 @@
+/***************|récuperer chaque photographe et sa data|***************/
 async function getPhotographers() {
   let data = [];
   await fetch("./../../data/photographers.json").then(
@@ -6,14 +7,8 @@ async function getPhotographers() {
   return data;
 }
 
-async function test2() {
-  let onVerra = await getPhotographers();
-  console.log(onVerra);
-}
-test2();
-
-
-// Afficher les photographes sur l'accueil
+/***************|Afficher les photographes sur l'accueil|***************/
+// avec la fonction photographerFactory(target,data) qui construit le bloc html du photographe.
 async function userDisplay() {
   const photographerInfo = await getPhotographers();
   const photographersSection = document.querySelector(".photographer_section");

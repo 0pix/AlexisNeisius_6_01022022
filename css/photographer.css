@@ -164,10 +164,6 @@ select:focus > option:checked {
   cursor: pointer;
 }
 
-.text-likes button:hover {
-  transform: scale(1.2);          
-}
-
 .heart-likes {
   display: flex;
   align-items: center;

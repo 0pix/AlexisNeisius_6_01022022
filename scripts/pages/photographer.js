@@ -1,5 +1,4 @@
 
-
 /***************|Récuperer tout les photogaphes sur le  Json***************/
 async function getPhotographers() {
   await fetch("./../../data/photographers.json")
@@ -7,16 +6,6 @@ async function getPhotographers() {
     .then((data) => (photographers = data.photographers));
   return {
     photographers,
-  };
-}
-
-/***************|Récuperer tout les médias sur le Json***************/
-async function getMedia() {
-  await fetch("./../../data/photographers.json")
-    .then((res) => res.json())
-    .then((data) => (media = data.media));
-  return {
-    media,
   };
 }
 
@@ -35,7 +24,7 @@ function getIdFromUrl() {
 console.log("l'id de le page actuelle est : " + getIdFromUrl());
 // if (!photographerNumberId) window.history.go(-1)
 
-/***************|Récupérer le bon photographe de la page via JSON|***************/
+/***************|Récupérer les informations du bon photographe de la page via JSON avec l'id|***************/
 async function getPhotographerInfo() {
   const id = getIdFromUrl();
   const thePhotographers = await getPhotographers();
@@ -43,6 +32,31 @@ async function getPhotographerInfo() {
     (element) => element.id === id
   );
   return photographerInfo;
+}
+
+/***************| contenu de Photographer-header|***************/
+async function addPhotographerInHeader() {
+  const photographerInfo = await getPhotographerInfo();
+  const photographerHeader = document.getElementById("photograph-header");
+  photographerHeaderFactory(photographerHeader, photographerInfo)
+}
+
+
+
+
+
+
+
+
+
+/***************|Récuperer tout les médias sur le Json***************/
+async function getMedia() {
+  await fetch("./../../data/photographers.json")
+    .then((res) => res.json())
+    .then((data) => (media = data.media));
+  return {
+    media,
+  };
 }
 
 /***************|Récupérer les bon médias du photographe avec l'id|***************/
@@ -55,25 +69,9 @@ async function getGoodMediasWithId() {
   return mediaPhotographer;
 }
 
-/***************| contenu de Photographer-header|***************/
-async function addPhotographerInHeader() {
-  const photographerInfo = await getPhotographerInfo();
-  const photographerHeader = document.getElementById("photograph-header");
-  photographerHeaderFactory(photographerHeader, photographerInfo)
-}
-
-/***************|Carrousel et tag|***************/
-async function carrousel(media) {
-  const photographCarrousel = document.getElementById("carrousel");
-  const photographerInfo = await getPhotographerInfo();
-  media = media ?? (await getTagLikes());
-  carrouselFactory(photographCarrousel, media, photographerInfo)
-}
-
 /***************|Trier les médias par likes|***************/
 async function getTagLikes() {
   let goodMedias = await getGoodMediasWithId();
-
   return goodMedias.sort((a, b) => b.likes - a.likes);
 }
 
@@ -88,7 +86,6 @@ async function getTagDates() {
 /***************|Trier les médias par Titre|***************/
 async function getTagTitles() {
   let goodMedias = await getGoodMediasWithId();
-
   return goodMedias.sort((a, b) => {
     if (a.title > b.title) {
       return 1;
@@ -100,7 +97,7 @@ async function getTagTitles() {
   });
 }
 
-/***************|Récuperer le bon tableau des média en fontion du tag chosis|***************/
+/***************|Récuperer le bon tableau des média triés en fontion du tag choisis|***************/
 async function getGoodMedias() {
   const selectFilters = document.getElementById("pet-select");
   let goodMedias = [];
@@ -114,6 +111,14 @@ async function getGoodMedias() {
     goodMedias = await getTagTitles();
   }
   return goodMedias;
+}
+
+/***************| afficher Carrousel |***************/
+async function carrousel(media) {
+  const photographCarrousel = document.getElementById("carrousel");
+  const photographerInfo = await getPhotographerInfo();
+  media = media ?? (await getTagLikes());
+  carrouselFactory(photographCarrousel, media, photographerInfo)
 }
 
 async function onSelectOption() {
@@ -171,32 +176,21 @@ async function zoom(id) {
   const thePicture = goodMedias.find((element) => element.id === id);
   let indexImg = goodMedias.indexOf(thePicture);
   zoomModal.style.display = "flex";
-  buildImageCarrousel(goodMedias, photographerInfo, imgAndTitle, indexImg);
+  buildImageZoom(goodMedias, photographerInfo, imgAndTitle, indexImg);
 
-  // Click on arrow
+  // clic sur les boutons flêches
   leftArrow.addEventListener("click", () => {
-    indexImg = previousImage(
-      indexImg,
-      goodMedias,
-      photographerInfo,
-      imgAndTitle
-    );
+    indexImg = previousImage(indexImg, goodMedias,photographerInfo,imgAndTitle);
   });
 
   rightArrow.addEventListener("click", () => {
     indexImg = nextImage(indexImg, goodMedias, photographerInfo, imgAndTitle);
   });
 
-
-  // With arrow from keyboard
+  // flêches du clavier 
   window.addEventListener("keydown", (e) => {
     if (zoomModal.style.display === "flex" && e.key === "ArrowLeft") {
-      indexImg = previousImage(
-        indexImg,
-        goodMedias,
-        photographerInfo,
-        imgAndTitle
-      );
+      indexImg = previousImage(indexImg,goodMedias,photographerInfo,imgAndTitle);
     } else if (zoomModal.style.display === "flex" && e.key === "ArrowRight") {
       indexImg = nextImage(indexImg, goodMedias, photographerInfo, imgAndTitle);
     }
@@ -204,13 +198,7 @@ async function zoom(id) {
   noScroll()
 }
 
-function closeZoom() {
-  const zoomModal = document.getElementById("zoom-modal");
-  const body = document.querySelector("body");
-  zoomModal.style.display = "none";
-  body.style.overflowY = "auto"
-}
-
+/***************|Pas de scroll quand la modal est ouverte|***************/
 function noScroll() {
   const zoomModal = document.getElementById("zoom-modal");
   const body = document.querySelector("body");
@@ -221,7 +209,15 @@ function noScroll() {
   body.style.overflowY = "hidden"
 }
 
+/***************|Fermer la modal|***************/
+function closeZoom() {
+  const zoomModal = document.getElementById("zoom-modal");
+  const body = document.querySelector("body");
+  zoomModal.style.display = "none";
+  body.style.overflowY = "auto"
+}
 
+/***************|Fermer la modal avec la touche echap|***************/
 window.addEventListener ("keydown", (e) =>{
   const zoomModal = document.getElementById("zoom-modal");
   if (zoomModal.style.display = "flex" && e.key === "Escape") {
@@ -229,6 +225,7 @@ window.addEventListener ("keydown", (e) =>{
   }
 });
 
+/***************|Fermer la modal en cliquant à coté |***************/
 window.addEventListener("click", (event) => {
   const modal = document.getElementById("zoom-modal");
   if(event.target == modal) {

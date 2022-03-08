@@ -1,4 +1,4 @@
-/***************| |***************/
+/***************|Construction du bloc de la bannière|***************/
 function photographerHeaderFactory(target, data) {
   target.innerHTML = `
         <div>
@@ -16,7 +16,7 @@ function photographerHeaderFactory(target, data) {
       `;
 }
 
-/***************| construction des cards|***************/
+/***************| construction des cards du portfolio |***************/
 function carrouselFactory(target, dataMedia, dataPhotographer) {
   target.innerHTML = dataMedia
     .map(
@@ -50,35 +50,34 @@ function carrouselFactory(target, dataMedia, dataPhotographer) {
     .join("");
 }
 
-
-
+/***************|Fonctions lié au changements d'images sur la modal|***************/
 function previousImage(indexImg, goodMedias, photographerInfo, imgAndTitle) {
     if (indexImg === 0) {
       indexImg = goodMedias.length - 1;
     } else {
       indexImg--;
     }
-    buildImageCarrousel(goodMedias, photographerInfo, imgAndTitle, indexImg);
+    buildImageZoom(goodMedias, photographerInfo, imgAndTitle, indexImg);
     return indexImg;
-  }
+}
   
-  function nextImage(indexImg, goodMedias, photographerInfo, imgAndTitle) {
-    if (indexImg === goodMedias.length - 1) {
-      indexImg = 0;
-    } else {
-      indexImg++;
-    }
-    buildImageCarrousel(goodMedias, photographerInfo, imgAndTitle, indexImg);
-    return indexImg;
+function nextImage(indexImg, goodMedias, photographerInfo, imgAndTitle) {
+  if (indexImg === goodMedias.length - 1) {
+    indexImg = 0;
+  } else {
+    indexImg++;
   }
+  buildImageZoom(goodMedias, photographerInfo, imgAndTitle, indexImg);
+  return indexImg;
+}
   
-  function buildImageCarrousel(goodMedias, photographerInfo, element, index) {
-    element.innerHTML = `
-    ${
-      goodMedias[index].image
-        ? `<img src="./assets/images/media/${photographerInfo.name}/${goodMedias[index].image}" id="zoom-img" alt="">`
-        : `<video  controls autoplay id="zoom-video"><source src="assets/images/media/${photographerInfo.name}/${goodMedias[index].video}" id="zoom-video" type="video/mp4" alt="photo de ${photographerInfo.name}"></video>`
-    }
-  <h2>${goodMedias[index].title}</h2>
-    `;
+function buildImageZoom(goodMedias, photographerInfo, element, index) {
+  element.innerHTML = `
+  ${
+    goodMedias[index].image
+      ? `<img src="./assets/images/media/${photographerInfo.name}/${goodMedias[index].image}" id="zoom-img" alt="">`
+      : `<video  controls autoplay id="zoom-video"><source src="assets/images/media/${photographerInfo.name}/${goodMedias[index].video}" id="zoom-video" type="video/mp4" alt="photo de ${photographerInfo.name}"></video>`
   }
+<h2>${goodMedias[index].title}</h2>
+  `;
+}
