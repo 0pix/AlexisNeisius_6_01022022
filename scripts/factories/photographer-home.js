@@ -1,4 +1,6 @@
-function photographerFactory(target, data) {
+/* eslint-disable no-unused-vars */
+
+function photographerFactory (target, data) {
   target.innerHTML = data
     .map(
       (photographer) =>
@@ -16,5 +18,5 @@ function photographerFactory(target, data) {
     </article>
     `
     )
-    .join("");
+    .join('')
 }

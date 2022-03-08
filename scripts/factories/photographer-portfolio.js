@@ -1,5 +1,8 @@
-/***************|Construction du bloc de la bannière|***************/
-function photographerHeaderFactory(target, data) {
+/* eslint-disable no-unused-vars */
+
+/** *************|Construction du bloc de la bannière|***************/
+
+function photographerHeaderFactory (target, data) {
   target.innerHTML = `
         <div>
           <h2 class="test">${data.name}</h2>
@@ -13,11 +16,12 @@ function photographerHeaderFactory(target, data) {
         <div id="bloc-picture">
           <img src="assets/photographers/${data.portrait}" alt="photo de ${data.name}">
         </div>
-      `;
+      `
 }
 
-/***************| construction des cards du portfolio |***************/
-function carrouselFactory(target, dataMedia, dataPhotographer) {
+/** *************| construction des cards du portfolio |***************/
+
+function carrouselFactory (target, dataMedia, dataPhotographer) {
   target.innerHTML = dataMedia
     .map(
       (mediaPhoto) =>
@@ -47,31 +51,32 @@ function carrouselFactory(target, dataMedia, dataPhotographer) {
   `
     )
 
-    .join("");
+    .join('')
 }
 
-/***************|Fonctions lié au changements d'images sur la modal|***************/
-function previousImage(indexImg, goodMedias, photographerInfo, imgAndTitle) {
-    if (indexImg === 0) {
-      indexImg = goodMedias.length - 1;
-    } else {
-      indexImg--;
-    }
-    buildImageZoom(goodMedias, photographerInfo, imgAndTitle, indexImg);
-    return indexImg;
-}
-  
-function nextImage(indexImg, goodMedias, photographerInfo, imgAndTitle) {
-  if (indexImg === goodMedias.length - 1) {
-    indexImg = 0;
+/** *************|Fonctions lié au changements d'images sur la modal|***************/
+
+function previousImage (indexImg, goodMedias, photographerInfo, imgAndTitle) {
+  if (indexImg === 0) {
+    indexImg = goodMedias.length - 1
   } else {
-    indexImg++;
+    indexImg--
   }
-  buildImageZoom(goodMedias, photographerInfo, imgAndTitle, indexImg);
-  return indexImg;
+  buildImageZoom(goodMedias, photographerInfo, imgAndTitle, indexImg)
+  return indexImg
 }
-  
-function buildImageZoom(goodMedias, photographerInfo, element, index) {
+
+function nextImage (indexImg, goodMedias, photographerInfo, imgAndTitle) {
+  if (indexImg === goodMedias.length - 1) {
+    indexImg = 0
+  } else {
+    indexImg++
+  }
+  buildImageZoom(goodMedias, photographerInfo, imgAndTitle, indexImg)
+  return indexImg
+}
+
+function buildImageZoom (goodMedias, photographerInfo, element, index) {
   element.innerHTML = `
   ${
     goodMedias[index].image
@@ -79,5 +84,5 @@ function buildImageZoom(goodMedias, photographerInfo, element, index) {
       : `<video  controls autoplay id="zoom-video"><source src="assets/images/media/${photographerInfo.name}/${goodMedias[index].video}" id="zoom-video" type="video/mp4" alt="photo de ${photographerInfo.name}"></video>`
   }
 <h2>${goodMedias[index].title}</h2>
-  `;
+  `
 }
